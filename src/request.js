@@ -1,13 +1,12 @@
 import { baseURL } from './config';
-
-let authToken = null;
+import Auth from './auth';
 
 const requestHeaders = () => {
   let headers = new Headers();
 
   headers.append('Content-Type', 'application/json');
   headers.append('Accept', 'application/json');
-  headers.append('X-API-Session', authToken);
+  headers.append('X-API-Session', Auth.token());
 
   return headers;
 };
@@ -30,14 +29,6 @@ const handleUnauthenticated = (response) => {
   return new Promise((resolve) => {
     resolve(response);
   });
-};
-
-const setAuthToken = (token) => {
-  authToken = token;
-};
-
-const handleJson = (response) => {
-  return response.json();
 };
 
 const request = (method, path, opts = {}) => {
@@ -69,11 +60,14 @@ const post = (path, postData = {}) => {
   return request('post', path, { postData });
 };
 
+const destroy = (path, opts = {}) => {
+  return request('delete', path);
+};
+
 export default {
-  setAuthToken,
-  handleJson,
   handleUnauthenticated,
   request,
   get,
-  post
+  post,
+  destroy
 };
