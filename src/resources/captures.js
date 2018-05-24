@@ -1,7 +1,7 @@
 import { post } from '../request';
 
 const basePath = (patientID, proofID) => {
-  return '/proofs/' + proofID + '/captures';
+  return '/patients/' + patientID + '/proofs/' + proofID + '/captures';
 };
 
 /* eslint-disable camelcase */

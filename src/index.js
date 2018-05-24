@@ -3,7 +3,8 @@ import proofs from './resources/proofs';
 import patients from './resources/patients';
 import captures from './resources/captures';
 import notes from './resources/notes';
-import auth from './auth';
+
+import upload from './upload';
 
 import CurrentUser from './current_user';
 import Auth from './auth';
@@ -33,13 +34,13 @@ const logout = (opts = {}) => {
 export default {
   login,
   logout,
-  auth,
   isAuthenticated: CurrentUser.isAuthenticated,
   currentUser: {
     user: CurrentUser.user,
     isPatient: CurrentUser.isPatient,
     isClinician: CurrentUser.isClinician
   },
+  upload,
   resources: {
     proofs,
     patients,
