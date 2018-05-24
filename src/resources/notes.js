@@ -1,8 +1,19 @@
+import { post } from '../request';
 
-const create = () => {};
-const list = () => {};
+const url = (patientID, proofID) =>
+  '/patients/' + patientID + '/proofs/' + proofID + '/notes';
 
-export default {
-  create,
-  list
+/* eslint-disable camelcase */
+const prepareEntity = (note) => {
+  return {
+    body: note.body,
+    only_visible_to_clinicians: note.only_visible_to_clinicians
+  };
 };
+/* eslint-enable camelcase */
+
+const create = (patientID, proofID, note, opts = {}) => {
+  return post(url(patientID, proofID), prepareEntity(note));
+};
+
+export default { create };

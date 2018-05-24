@@ -3,34 +3,42 @@ import Request from '../request';
 
 const basePath = (patientID, path) => { return '/patients/' + patientID + '/proofs'; };
 
-const list = (patientID = null) => {
+const urlParams = (opts = {}) => {
+  return (opts.hasOwnProperty('short') && opts.short) ?
+    {} :
+    { include: opts.include ? opts.include : 'captures,notes,surveys,proof_surveys' };
+};
+
+// Path: /patients/<patien_id>/proofs
+const list = (patientID = null, opts = {}) => {
   if (CurrentUser.isClinician()) {
-    console.log('Error: this call only allowed for patient.');
+    console.error('Error: this call only allowed for patient.');
     return [];
   }
 
   if (patientID === null && CurrentUser.isPatient()) {
-    patientID = CurrentUser.user.id;
+    patientID = CurrentUser.user().id;
   }
 
-  if (CurrentUser.isPatient() && CurrentUser.user.id !== patientID) {
-    console.log('Error: unable to get proof list for other patient');
+  if (CurrentUser.isPatient() && CurrentUser.user().id !== patientID) {
+    console.error('Error: unable to get proof list for other patient');
     return [];
   }
 
-  return Request.get(basePath(patientID));
+  return Request.get(basePath(patientID), urlParams());
 };
 
+// Path: /patients/<patien_id>/proofs/<proof_id>
 const get = (proofID, patientID = null) => {
   if (patientID === null) {
     if (CurrentUser.isClinician()) {
-      console.log('Error: no patientID provided.');
+      console.error('Error: no patientID provided.');
       return [];
     }
-    patientID = CurrentUser.user.id;
+    patientID = CurrentUser.user().id;
   }
 
-  return Request.get(basePath(patientID) + '/' + proofID);
+  return Request.get(basePath(patientID) + '/' + proofID, urlParams());
 };
 
 export default {

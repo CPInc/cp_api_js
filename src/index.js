@@ -1,6 +1,9 @@
 import session from './resources/session';
 import proofs from './resources/proofs';
 import patients from './resources/patients';
+import captures from './resources/captures';
+import notes from './resources/notes';
+import auth from './auth';
 
 import CurrentUser from './current_user';
 import Auth from './auth';
@@ -30,16 +33,18 @@ const logout = (opts = {}) => {
 export default {
   login,
   logout,
-  Auth,
+  auth,
+  isAuthenticated: CurrentUser.isAuthenticated,
   currentUser: {
     user: CurrentUser.user,
     isPatient: CurrentUser.isPatient,
-    isClinician: CurrentUser.isClinician,
-    isAuthenticated: CurrentUser.isAuthenticated
+    isClinician: CurrentUser.isClinician
   },
   resources: {
     proofs,
-    patients
+    patients,
+    notes,
+    captures
   }
 };
 

@@ -11,13 +11,13 @@ const requestHeaders = () => {
   return headers;
 };
 
-const fullURL = (path, params = {}) => {
+const fullURL = (path, urlParams = {}) => {
   const url = baseURL + path;
-  const paramsString = Object.keys(params).map((key) => {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+  const paramsString = Object.keys(urlParams).map((key) => {
+    return encodeURIComponent(key) + '=' + encodeURIComponent(urlParams[key]);
   }).join('&');
 
-  return paramsString.length === 0 ? url : baseURL + '?' + paramsString;
+  return paramsString.length === 0 ? url : url + '?' + paramsString;
 };
 
 // Public
@@ -31,6 +31,9 @@ const handleUnauthenticated = (response) => {
   });
 };
 
+// opts:
+//   urlParams - params for url
+//   postData - post data to send
 const request = (method, path, opts = {}) => {
   const body = JSON.stringify(opts.postData);
   let status = 0;
@@ -52,16 +55,16 @@ const request = (method, path, opts = {}) => {
     });
 };
 
-const get = (path, urlParams) => {
-  return request('get', path, { urlParams });
+const get = (path, urlParams = {}, opts = {}) => {
+  return request('get', path, { urlParams, ...opts });
 };
 
-const post = (path, postData = {}) => {
-  return request('post', path, { postData });
+const post = (path, postData = {}, opts = {}) => {
+  return request('post', path, { postData, ...opts });
 };
 
 const destroy = (path, opts = {}) => {
-  return request('delete', path);
+  return request('delete', path, opts);
 };
 
 export default {
