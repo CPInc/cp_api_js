@@ -23,9 +23,9 @@ const config = {
   output: {
     path: __dirname + '/lib',
     filename: outputFile,
-    library: 'CPApiClient',
-    libraryTarget: 'window',
-    // libraryTarget: 'commonjs',
+    // library: 'CPApiClient',
+    // libraryTarget: 'window',
+    libraryTarget: 'commonjs',
     umdNamedDefine: true
   },
   module: {

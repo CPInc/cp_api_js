@@ -1,7 +1,9 @@
 let loggedUser = null;
 
-const isAuthenticated = () => { return loggedUser === null; };
-const isClinician = () => { return loggedUser.hasOwnProperty('specialty'); };
+const isAuthenticated = () => { return loggedUser !== null; };
+const isClinician = () => {
+  return isAuthenticated() && ('specialty' in loggedUser);
+};
 const isPatient = () => { return !isClinician(); };
 const setCurrentUser = (currentUser) => { loggedUser = Object.assign({}, currentUser); };
 const user = () => { return loggedUser; };

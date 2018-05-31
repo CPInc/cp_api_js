@@ -1,4 +1,4 @@
-import { baseURL } from './config';
+import config from './config';
 import Auth from './auth';
 
 const requestHeaders = () => {
@@ -12,7 +12,7 @@ const requestHeaders = () => {
 };
 
 const fullURL = (path, urlParams = {}) => {
-  const url = baseURL + path;
+  const url = config.config().baseURL + path;
   const paramsString = Object.keys(urlParams).map((key) => {
     return encodeURIComponent(key) + '=' + encodeURIComponent(urlParams[key]);
   }).join('&');
@@ -28,6 +28,12 @@ const handleUnauthenticated = (response) => {
   }
   return new Promise((resolve) => {
     resolve(response);
+  });
+};
+
+const unauthorizedPromise = () => {
+  return new Promise(resolve => {
+    resolve({status: 401});
   });
 };
 
@@ -69,6 +75,7 @@ const destroy = (path, opts = {}) => {
 
 export default {
   handleUnauthenticated,
+  unauthorizedPromise,
   request,
   get,
   post,

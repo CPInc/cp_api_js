@@ -11,10 +11,9 @@ const urlParams = (opts = {}) => {
 
 // Path: /patients/<patien_id>/proofs
 const list = (patientID = null, opts = {}) => {
-  if (CurrentUser.isClinician()) {
-    console.error('Error: this call only allowed for patient.');
-    return [];
-  }
+  if (!CurrentUser.isAuthenticated()) {
+    return Request.unauthorizedPromise();
+  };
 
   if (patientID === null && CurrentUser.isPatient()) {
     patientID = CurrentUser.user().id;
@@ -29,7 +28,11 @@ const list = (patientID = null, opts = {}) => {
 };
 
 // Path: /patients/<patien_id>/proofs/<proof_id>
-const get = (proofID, patientID = null) => {
+const get = (patientID, proofID) => {
+  if (!CurrentUser.isAuthenticated()) {
+    return Request.unauthorizedPromise();
+  };
+
   if (patientID === null) {
     if (CurrentUser.isClinician()) {
       console.error('Error: no patientID provided.');
