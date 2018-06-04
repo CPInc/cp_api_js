@@ -10,6 +10,13 @@ credentials[TYPE_CAPTURE] = null;
 credentials[TYPE_PROTOCOL_LOGO] = null;
 credentials[TYPE_IM] = null;
 
+// Generates uuid
+const uuidv4 = () => {
+  return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+};
+
 const getCredentialsFor = (type, callback) => {
   if (credentials[type] !== null) {
     return credentials[type];
@@ -66,7 +73,6 @@ const guessMimeType = (filename) => {
 };
 
 const upload = (type, file, opts = {}) => {
-  console.log('Upload!!!');
   let
     formData = new FormData(),
     xhr = new XMLHttpRequest();
@@ -77,6 +83,7 @@ const upload = (type, file, opts = {}) => {
   if (creds === null) { return ''; }
 
   creds.key = creds.key.replace('{extension}', file.name.split('.').pop());
+  creds.key = creds.key.replace('{uuid}', uuidv4());
 
   formData.append('utf8', '✓');
   formData.append('x-amz-server-side-encryption', 'AES256');
@@ -92,30 +99,26 @@ const upload = (type, file, opts = {}) => {
 
   xhr.open('POST', creds.action_url);
 
-  xhr.upload.addEventListener('progress', (event) => {
-    if (event.lengthComputable &&
-        typeof opts.progress === 'function') {
+  if (typeof opts.progress === 'function') {
+    xhr.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) {
+        opts.progress(event.loaded, event.total);
+      };
+    });
+  }
 
-      opts.progress(event.loaded, event.total);
-    };
-  });
-
-  xhr.onloadstart = (e) => {
-    if (typeof opts.start === 'function') {
-      opts.start(e);
-    }
+  if (typeof opts.start === 'function') {
+    xhr.onloadstart = opts.start;
   };
 
-  xhr.onloadend = (e) => {
-    if (typeof opts.success === 'function') {
+  if (typeof opts.success === 'function') {
+    xhr.onloadend = (e) => {
       opts.success(creds.key, e);
-    }
+    };
   };
 
-  xhr.onerror = (e) => {
-    if (typeof opts.error === 'function') {
-      opts.error(e);
-    }
+  if (typeof opts.error === 'function') {
+    xhr.onerror = opts.error;
   };
 
   xhr.send(formData);
@@ -123,9 +126,9 @@ const upload = (type, file, opts = {}) => {
   return creds.key;
 };
 
-const capture = (file, opts = {}) => { upload(TYPE_CAPTURE, file); };
-const protocolLogo = (file, opts = {}) => { upload(TYPE_PROTOCOL_LOGO, file); };
-const instructionalMedium = (file, opts = {}) => { upload(TYPE_IM, file); };
+const capture = (file, opts = {}) => { upload(TYPE_CAPTURE, file, opts); };
+const protocolLogo = (file, opts = {}) => { upload(TYPE_PROTOCOL_LOGO, file, opts); };
+const instructionalMedium = (file, opts = {}) => { upload(TYPE_IM, file, opts); };
 
 export default {
   capture,

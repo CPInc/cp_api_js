@@ -26,7 +26,7 @@ const prepareEntity = (capture) => {
 /* eslint-enable camelcase */
 
 const create = (patientID, proofID, capture, opts = {}) => {
-  return post(basePath(patientID, proofID, prepareEntity(capture)));
+  return post(basePath(patientID, proofID), prepareEntity(capture));
 };
 
 export default { create };
