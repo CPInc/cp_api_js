@@ -1,6 +1,6 @@
 {
   "name": "cp-api-client",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Gives access to CAPTUREPROOF API",
   "main": "lib/cp-api-client.js",
   "prepublish": "npm run build",

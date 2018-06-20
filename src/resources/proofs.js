@@ -44,7 +44,15 @@ const get = (patientID, proofID) => {
   return Request.get(basePath(patientID) + '/' + proofID, urlParams());
 };
 
+const save = (patientID, proof, opts = {}) => {
+  if (proof.id) {
+    return Request.put(basePath(patientID) + '/' + proof.id, proof, opts);
+  }
+  return Request.post(basePath(patientID), proof, opts);
+};
+
 export default {
   list,
-  get
+  get,
+  save
 };

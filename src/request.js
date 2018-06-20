@@ -69,6 +69,14 @@ const post = (path, postData = {}, opts = {}) => {
   return request('post', path, { postData, ...opts });
 };
 
+const patch = (path, postData = {}, opts = {}) => {
+  return request('patch', path, { postData, ...opts });
+};
+
+const put = (path, postData = {}, opts = {}) => {
+  return request('put', path, { postData, ...opts });
+};
+
 const destroy = (path, opts = {}) => {
   return request('delete', path, opts);
 };
@@ -79,5 +87,7 @@ export default {
   request,
   get,
   post,
+  patch,
+  put,
   destroy
 };

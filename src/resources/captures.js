@@ -10,7 +10,6 @@ const prepareEntity = (capture) => {
     description,
     upload_s3_key,
     library_item_id,
-    media,
     camera_type,
     metadata } = capture;
 
@@ -18,7 +17,6 @@ const prepareEntity = (capture) => {
     description,
     upload_s3_key,
     library_item_id,
-    media,
     camera_type,
     metadata
   };
